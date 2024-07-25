@@ -1,0 +1,67 @@
+import router from '@ohos.router'
+import { User } from '../entity/User'
+import { login } from './httpRequest/UserRelated'
+/**
+ * 登录页面
+ */
+@Entry
+@Component
+struct Login{
+ 
+  @State user: User = new User('','')
+ 
+  build(){
+    Column({space: 10}){
+      Row(){
+        Text('+86')
+        TextInput({placeholder: '请输入手机号'})
+          .type(InputType.PhoneNumber)
+          .height(45)
+          .backgroundColor('#ffffff')
+          .padding(10)
+          .layoutWeight(1)
+          .onChange(value =>{
+            this.user.phone = value
+          })
+      }.padding({left: 20, right: 20})
+      Row(){
+        TextInput({placeholder: '请输入密码'})
+          .type(InputType.Number)
+          .height(45)
+          .backgroundColor('#ffffff')
+          .padding({left: 0, right: 0})
+          .layoutWeight(1)
+          .onChange(value =>{
+            this.user.password = value
+          })
+      }.padding({left: 20, right: 20})
+      Row(){
+        Button('登 录')
+          .type(ButtonType.Normal)
+          .fontSize(20)
+          .width('100%')
+          .borderRadius(20)
+          .backgroundColor('#2f90b9')
+          .fontColor('#ffffff')
+          .onClick(() => {
+            login(this.user).then(res =>{
+              if (res.code === 1) {
+                router.pushUrl({
+                  url: 'pages/Index'
+                })
+              } else {
+                AlertDialog.show({
+                  title: '警告',
+                  message: res.msg
+                })
+              }
+            })
+          })
+      }.padding({left: 20, right: 20})
+ 
+    }
+    .width('100%')
+    .height('100%')
+    .justifyContent(FlexAlign.Center)
+  }
+}d
